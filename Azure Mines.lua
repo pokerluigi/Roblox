@@ -70,11 +70,15 @@ Misc:AddToggle({
 	Callback = function(Value)
 		local stuff = {Lighting.GameBlur, Lighting.ColorCorrection, Lighting.Blur, Lighting.Bloom}
 		if Value == true then
+			game.Lighting.FogEnd = 100000
+			game.Lighting.FogStart = 0
 			for _, v in pairs(stuff) do
 				v.Enabled = false
 				Lighting.Atmosphere.Parent = ReplicatedStorage
 			end
 		else
+			game.Lighting.FogEnd = 700
+			game.Lighting.FogStart = -324982342584107000
 			for _, v in pairs(stuff) do
 				v.Enabled = true
 				if ReplicatedStorage:FindFirstChild("Atmosphere") then

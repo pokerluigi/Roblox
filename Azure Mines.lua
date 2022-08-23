@@ -164,7 +164,7 @@ Main:AddToggle({
 })
 
 Misc:AddToggle({
-	Name = "Autocollect Ambrosia (Don't autofarm with this)",
+	Name = "Auto Ghostmine Ambrosia (Don't autofarm with this!)",
 	Default = false,
 	Callback = function(Value)
 		AmbrosiaTP = Value

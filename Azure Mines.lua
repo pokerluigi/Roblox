@@ -144,7 +144,7 @@ Main:AddToggle({
 	Callback = function(Value)
 		ESPtoggle = Value
 		while ESPtoggle do
-			task.wait(0.2)
+			task.wait(0.666)
 			for _,v in pairs(Mine:GetChildren()) do
 				if v.Name == Ore and not v:FindFirstChildWhichIsA("BillboardGui") then
 					addUi(v)

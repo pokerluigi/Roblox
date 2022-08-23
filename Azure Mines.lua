@@ -229,4 +229,19 @@ Main:AddToggle({
 	end
 })
 
+game.Workspace.Mine.ChildAdded:Connect(function(child)
+	task.wait(0.1)
+	if child.Name == "Ambrosia" then
+		OrionLib:MakeNotification({
+			Name = "OH MA GAWD",
+			Content = "Ambrosia just spawned!",
+			Image = "rbxassetid://10693905882",
+			Time = 10
+		})
+	else
+		return
+	end
+end)
+
+
 OrionLib:Init()

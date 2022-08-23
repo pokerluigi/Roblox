@@ -168,6 +168,7 @@ Main:AddToggle({
 	Callback = function(toggled)
 		farming = toggled
 		while farming do
+			workspace.Gravity = 0
 			local char
 			if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 				Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
@@ -179,7 +180,6 @@ Main:AddToggle({
 					break
 				end
 				if v.Name == Ore then
-					workspace.Gravity = 0
 					v.CanCollide = false
 					Plr.Character.HumanoidRootPart.CFrame = v.CFrame
 					task.wait(0.1)
@@ -209,7 +209,6 @@ Main:AddToggle({
 						end
 						task.wait(0.1)
 					until v.Parent ~= Mine
-					workspace.Gravity = 192
 					Plr.Character.HumanoidRootPart.Anchored = false
 					if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 						Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]

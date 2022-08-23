@@ -31,8 +31,8 @@ local ESPtoggle
 function addUi(part)
 	local partgui = Instance.new("BillboardGui")
 	local frame = Instance.new("Frame")
-	local namegui = Instance.new("BillboardGui", part)
-	local text = Instance.new("TextLabel", namegui)
+	local namegui = Instance.new("BillboardGui")
+	local text = Instance.new("TextLabel")
 
 	partgui.Size = UDim2.new(1,0,1,0)
 	partgui.AlwaysOnTop = true

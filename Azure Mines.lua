@@ -1,5 +1,12 @@
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Plr = Players.LocalPlayer
+local Characters = workspace:FindFirstChild("Players")
+local Mine = workspace:FindFirstChild("Mine")
+
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 local Window = OrionLib:MakeWindow({Name = "End's Azure Mines Utility"})
 
 local Main = Window:MakeTab({
@@ -22,21 +29,27 @@ local deposit
 local ESPtoggle
 
 function addUi(part)
-	local partgui = Instance.new("BillboardGui", part)
+	local partgui = Instance.new("BillboardGui")
+	local frame = Instance.new("Frame")
+	local namegui = Instance.new("BillboardGui")
+	local text = Instance.new("TextLabel")
+
 	partgui.Size = UDim2.new(1,0,1,0)
 	partgui.AlwaysOnTop = true
 	partgui.Name = "ESP"
-	local frame = Instance.new("Frame", partgui)
+
 	frame.BackgroundColor3 = Color3.fromRGB(255,80,60)
 	frame.BackgroundTransparency = 0.75
 	frame.Size = UDim2.new(1,0,1,0)
 	frame.BorderSizePixel = 0
-	local namegui = Instance.new("BillboardGui", part)
+	frame.Parent = partgui
+
 	namegui.Size = UDim2.new(3,0,1.5,0)
 	namegui.SizeOffset = Vector2.new(0,1)
 	namegui.AlwaysOnTop = true
 	namegui.Name = "Namee"
-	local text = Instance.new("TextLabel", namegui)
+	namegui.Parent = part
+
 	text.Text = part.Name
 	text.TextColor3 = Color3.fromRGB(255,80,60)
 	text.TextTransparency = 0.25
@@ -45,29 +58,31 @@ function addUi(part)
 	text.Size = UDim2.new(1,0,1,0)
 	text.Font = Enum.Font.GothamSemibold
 	text.Name = "Text"
+	text.Parent = namegui
+
+	partgui.Parent = part
 end
 
 Misc:AddToggle({
 	Name = "FullBright",
 	Default = false,
 	Callback = function(Value)
-		local Lighting = game:GetService("Lighting")
 		local stuff = {Lighting.GameBlur, Lighting.ColorCorrection, Lighting.Blur, Lighting.Bloom}
 		if Value == true then
 			for _, v in pairs(stuff) do
 				v.Enabled = false
-				game.Lighting.Atmosphere.Parent = game.ReplicatedStorage
+				Lighting.Atmosphere.Parent = ReplicatedStorage
 			end
 		else
 			for _, v in pairs(stuff) do
 				v.Enabled = true
-				if game.ReplicatedStorage:FindFirstChild("Atmosphere") then
-					game.ReplicatedStorage.Atmosphere.Parent = game.Lighting
+				if ReplicatedStorage:FindFirstChild("Atmosphere") then
+					ReplicatedStorage.Atmosphere.Parent = Lighting
 				end
 			end
 		end
 
-	end    
+	end
 })
 
 Main:AddDropdown({
@@ -76,7 +91,7 @@ Main:AddDropdown({
 	Options = {"Ambrosia", "Amethyst", "Antimatter", "Azure", "Baryte", "Boomite", "Coal", "Copper", "Constellatium", "Darkmatter", "Diamond", "Dragonglass", "Dragonstone", "Emerald", "Firecrystal", "Frightstone", "Frostarium", "Garnet", "Gold", "Illuminunium", "Iron", "Kappa", "Mithril", "Moonstone", "Newtonium", "Nightmarium", "Opal", "Painite", "Platinum", "Plutonium", "Pumpkinite", "Promethium", "Rainbonite", "Ruby", "Sapphire", "Silver", "Serendibite", "Sinistyte L", "Sinistyte M", "Sinistyte S", "Stellarite", "Stone", "Sulfur", "Symmetrium", "Topaz", "Twitchite", "Unobtainium", "Uranium"},
 	Callback = function(Value)
 		Ore = Value
-	end    
+	end
 })
 
 Misc:AddToggle({
@@ -85,18 +100,18 @@ Misc:AddToggle({
 	Callback = function(Value)
 		Raygun = Value
 		if Raygun then
-			
-			if not game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]:FindFirstChild("RayGun") then
-				game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("RayGun").Parent = game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]
+
+			if not Characters[Plr.Name]:FindFirstChild("RayGun") then
+				Plr.Backpack:FindFirstChild("RayGun").Parent = Characters[Plr.Name]
 				wait(0.1)
-				game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]:FindFirstChild("RayGun").Parent = game:GetService("Players").LocalPlayer.Backpack
+				Characters[Plr.Name]:FindFirstChild("RayGun").Parent = Plr.Backpack
 			end
 		end
 		while Raygun do
-			game.Players.LocalPlayer.Backpack.RayGun.Gun.Func:InvokeServer("Reload")
+			Plr.Backpack.RayGun.Gun.Func:InvokeServer("Reload")
 			wait(3)
 		end
-	end    
+	end
 })
 
 Main:AddToggle({
@@ -105,22 +120,22 @@ Main:AddToggle({
 	Callback = function(Value)
 		deposit = Value
 		while deposit do
-			game.ReplicatedStorage.MoveAllItems:InvokeServer()
+			ReplicatedStorage.MoveAllItems:InvokeServer()
 			task.wait(5)
 		end
-	end    
+	end
 })
 
 Main:AddButton({
 	Name = "Teleport to Ore",
 	Callback = function()
-		for _,v in pairs(game.Workspace.Mine:GetChildren()) do
+		for _,v in pairs(Mine:GetChildren()) do
 			if v.Name == Ore then
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+				Plr.Character.HumanoidRootPart.CFrame = v.CFrame
 				break
 			end
 		end
-	end    
+	end
 })
 
 Main:AddToggle({
@@ -130,14 +145,14 @@ Main:AddToggle({
 		ESPtoggle = Value
 		while ESPtoggle do
 			task.wait(0.2)
-			for _,v in pairs(game.Workspace.Mine:GetChildren()) do
+			for _,v in pairs(Mine:GetChildren()) do
 				if v.Name == Ore and not v:FindFirstChildWhichIsA("BillboardGui") then
 					addUi(v)
 				end
 			end
 		end
 		if not ESPtoggle then
-			for _,v in pairs(game.Workspace.Mine:GetChildren()) do
+			for _,v in pairs(Mine:GetChildren()) do
 				if v:FindFirstChild("ESP") then
 					v.ESP:Destroy()
 					v.Namee:Destroy()
@@ -153,38 +168,39 @@ Main:AddToggle({
 	Callback = function(toggled)
 		farming = toggled
 		while farming do
-			if not game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]:FindFirstChild("Pickaxe") then
-				game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Pickaxe").Parent = game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]
+			local char
+			if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
+				Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
 			end
-			game.Workspace.Gravity = 0
-			game:GetService("Workspace").Players[game.Players.LocalPlayer.Name].Pickaxe.PickaxeScript.Disabled = true
+			workspace.Gravity = 0
+			Characters[Plr.Name].Pickaxe.PickaxeScript.Disabled = true
 			task.wait(0.1)
-			for _,v in pairs(game.Workspace.Mine:GetChildren()) do
+			for _,v in pairs(Mine:GetChildren()) do
 				if not farming then
 					break
 				end
 				if v.Name == Ore then
 					v.CanCollide = false
-					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+					Plr.Character.HumanoidRootPart.CFrame = v.CFrame
 					task.wait(0.1)
-					game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+					Plr.Character.HumanoidRootPart.Anchored = true
 					if Raygun == true then
-						game.Players.LocalPlayer.Backpack.RayGun.Gun.Func:InvokeServer("Fire", {Vector3.new(v.Position.X, v.Position.Y, v.Position.Z), 661203044677.2754, Vector3.new(v.Position.X, v.Position.Y-4, v.Position.Z)})
+						Plr.Backpack.RayGun.Gun.Func:InvokeServer("Fire", {Vector3.new(v.Position.X, v.Position.Y, v.Position.Z), 661203044677.2754, Vector3.new(v.Position.X, v.Position.Y-4, v.Position.Z)})
 					end
-					if not game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]:FindFirstChild("Pickaxe") then
-						game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Pickaxe").Parent = game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]
+					if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
+						Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
 					end
-					game:GetService("Workspace").Players[game.Players.LocalPlayer.Name].Pickaxe.SetTarget:InvokeServer(v)
+					Characters[Plr.Name].Pickaxe.SetTarget:InvokeServer(v)
 					task.wait(0.3)
-					game:GetService("Workspace").Players[game.Players.LocalPlayer.Name].Pickaxe.Activation:FireServer(true)
+					Characters[Plr.Name].Pickaxe.Activation:FireServer(true)
 					count = 0
 					repeat
 						count = count + 1
 						if not farming then
 							break
 						end
-						if not game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]:FindFirstChild("Pickaxe") then
-							game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Pickaxe").Parent = game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]
+						if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
+							Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
 							wait(0.1)
 							break
 						end
@@ -192,21 +208,21 @@ Main:AddToggle({
 							continue
 						end
 						task.wait(0.1)
-					until v.Parent ~= workspace.Mine
-					game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-					if not game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]:FindFirstChild("Pickaxe") then
-						game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Pickaxe").Parent = game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]
+					until v.Parent ~= Mine
+					Plr.Character.HumanoidRootPart.Anchored = false
+					if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
+						Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
 						task.wait(0.1)
 					end
-					game:GetService("Workspace").Players[game.Players.LocalPlayer.Name].Pickaxe.Activation:FireServer(false)
+					Characters[Plr.Name].Pickaxe.Activation:FireServer(false)
 				end
 			end
 			if farming == false then
-				game.Workspace.Gravity = 192
-				if game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]:FindFirstChild("Pickaxe") then
-					game:GetService("Workspace").Players[game.Players.LocalPlayer.Name]:FindFirstChild("Pickaxe").PickaxeScript.Disabled = false
-				elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Pickaxe") then
-					game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Pickaxe").PickaxeScript.Disabled = false
+				workspace.Gravity = 192
+				if Characters[Plr.Name]:FindFirstChild("Pickaxe") then
+					Characters[Plr.Name]:FindFirstChild("Pickaxe").PickaxeScript.Disabled = false
+				elseif Plr.Backpack:FindFirstChild("Pickaxe") then
+					Plr.Backpack:FindFirstChild("Pickaxe").PickaxeScript.Disabled = false
 				end
 			end
 		end

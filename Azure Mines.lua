@@ -172,7 +172,6 @@ Main:AddToggle({
 			if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 				Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
 			end
-			workspace.Gravity = 0
 			Characters[Plr.Name].Pickaxe.PickaxeScript.Disabled = true
 			task.wait(0.666)
 			for _,v in pairs(Mine:GetChildren()) do
@@ -180,6 +179,7 @@ Main:AddToggle({
 					break
 				end
 				if v.Name == Ore then
+					workspace.Gravity = 0
 					v.CanCollide = false
 					Plr.Character.HumanoidRootPart.CFrame = v.CFrame
 					task.wait(0.1)
@@ -191,7 +191,7 @@ Main:AddToggle({
 						Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
 					end
 					Characters[Plr.Name].Pickaxe.SetTarget:InvokeServer(v)
-					task.wait(0.3)
+					task.wait(0.2)
 					Characters[Plr.Name].Pickaxe.Activation:FireServer(true)
 					count = 0
 					repeat
@@ -209,6 +209,7 @@ Main:AddToggle({
 						end
 						task.wait(0.1)
 					until v.Parent ~= Mine
+					workspace.Gravity = 192
 					Plr.Character.HumanoidRootPart.Anchored = false
 					if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 						Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]

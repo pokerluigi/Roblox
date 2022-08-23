@@ -27,6 +27,7 @@ local farming = false
 local count
 local deposit
 local ESPtoggle
+local AmbrosiaTP
 
 function addUi(part)
 	local partgui = Instance.new("BillboardGui")
@@ -103,13 +104,13 @@ Misc:AddToggle({
 
 			if not Characters[Plr.Name]:FindFirstChild("RayGun") then
 				Plr.Backpack:FindFirstChild("RayGun").Parent = Characters[Plr.Name]
-				wait(0.1)
+				task.wait(0.1)
 				Characters[Plr.Name]:FindFirstChild("RayGun").Parent = Plr.Backpack
 			end
 		end
 		while Raygun do
 			Plr.Backpack.RayGun.Gun.Func:InvokeServer("Reload")
-			wait(3)
+			task.wait(3)
 		end
 	end
 })
@@ -162,6 +163,14 @@ Main:AddToggle({
 	end
 })
 
+Misc:AddToggle({
+	Name = "Autocollect Ambrosia (Don't autofarm with this)",
+	Default = false,
+	Callback = function(Value)
+		AmbrosiaTP = Value
+	end
+})
+
 Main:AddToggle({
 	Name = "Enable Autofarm",
 	Default = false,
@@ -201,7 +210,7 @@ Main:AddToggle({
 						end
 						if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 							Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
-							wait(0.1)
+							task.wait(0.1)
 							break
 						end
 						if count >= 2000 then
@@ -238,10 +247,33 @@ game.Workspace.Mine.ChildAdded:Connect(function(child)
 			Image = "rbxassetid://10693905882",
 			Time = 10
 		})
+		if AmbrosiaTP then
+			game.Workspace.Gravity = 0
+			if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
+				Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
+			end
+			Characters[Plr.Name].Pickaxe.PickaxeScript.Disabled = true
+			child.CanCollide = false
+			Plr.Character.HumanoidRootPart.CFrame = child.CFrame
+			task.wait(0.1)
+			Plr.Character.HumanoidRootPart.Anchored = true
+			Characters[Plr.Name].Pickaxe.SetTarget:InvokeServer(child)
+			task.wait(0.2)
+			Characters[Plr.Name].Pickaxe.Activation:FireServer(true)
+			repeat
+				task.wait(0.1)
+			until child.Parent ~= Mine
+			task.wait(0.1)
+			Characters[Plr.Name].Pickaxe.Activation:FireServer(false)
+			workspace.Gravity = 192
+			Plr.Character.HumanoidRootPart.Anchored = false
+			Characters[Plr.Name].Pickaxe.PickaxeScript.Disabled = false
+			game.ReplicatedStorage.ToSurface:InvokeServer()
+		end
+		
 	else
 		return
 	end
 end)
-
 
 OrionLib:Init()

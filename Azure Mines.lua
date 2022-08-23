@@ -174,7 +174,7 @@ Main:AddToggle({
 			end
 			workspace.Gravity = 0
 			Characters[Plr.Name].Pickaxe.PickaxeScript.Disabled = true
-			task.wait(0.1)
+			task.wait(0.666)
 			for _,v in pairs(Mine:GetChildren()) do
 				if not farming then
 					break

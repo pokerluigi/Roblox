@@ -19,6 +19,33 @@ local Raygun
 local farming = false
 local count
 local deposit
+local ESPtoggle
+
+function addUi(part)
+	local partgui = Instance.new("BillboardGui", part)
+	partgui.Size = UDim2.new(1,0,1,0)
+	partgui.AlwaysOnTop = true
+	partgui.Name = "ESP"
+	local frame = Instance.new("Frame", partgui)
+	frame.BackgroundColor3 = Color3.fromRGB(255,80,60)
+	frame.BackgroundTransparency = 0.75
+	frame.Size = UDim2.new(1,0,1,0)
+	frame.BorderSizePixel = 0
+	local namegui = Instance.new("BillboardGui", part)
+	namegui.Size = UDim2.new(3,0,1.5,0)
+	namegui.SizeOffset = Vector2.new(0,1)
+	namegui.AlwaysOnTop = true
+	namegui.Name = "Namee"
+	local text = Instance.new("TextLabel", namegui)
+	text.Text = part.Name
+	text.TextColor3 = Color3.fromRGB(255,80,60)
+	text.TextTransparency = 0.25
+	text.BackgroundTransparency = 1
+	text.TextScaled = true
+	text.Size = UDim2.new(1,0,1,0)
+	text.Font = Enum.Font.GothamSemibold
+	text.Name = "Text"
+end
 
 Misc:AddToggle({
 	Name = "FullBright",
@@ -87,13 +114,37 @@ Main:AddToggle({
 Main:AddButton({
 	Name = "Teleport to Ore",
 	Callback = function()
-		for i,v in pairs(game.Workspace.Mine:GetChildren()) do
+		for _,v in pairs(game.Workspace.Mine:GetChildren()) do
 			if v.Name == Ore then
 				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
 				break
 			end
 		end
 	end    
+})
+
+Main:AddToggle({
+	Name = "Ore ESP",
+	Default = false,
+	Callback = function(Value)
+		ESPtoggle = Value
+		while ESPtoggle do
+			task.wait(0.2)
+			for _,v in pairs(game.Workspace.Mine:GetChildren()) do
+				if v.Name == Ore and not v:FindFirstChildWhichIsA("BillboardGui") then
+					addUi(v)
+				end
+			end
+		end
+		if not ESPtoggle then
+			for _,v in pairs(game.Workspace.Mine:GetChildren()) do
+				if v:FindFirstChild("ESP") then
+					v.ESP:Destroy()
+					v.Namee:Destroy()
+				end
+			end
+		end
+	end
 })
 
 Main:AddToggle({

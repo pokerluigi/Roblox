@@ -149,6 +149,7 @@ Main:AddToggle({
 			for _,v in pairs(Mine:GetChildren()) do
 				if v.Name == Ore and not v:FindFirstChildWhichIsA("BillboardGui") then
 					addUi(v)
+					task.wait(0.166)
 				end
 			end
 		end

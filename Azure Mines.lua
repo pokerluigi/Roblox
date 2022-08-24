@@ -70,15 +70,11 @@ Misc:AddToggle({
 	Callback = function(Value)
 		local stuff = {Lighting.GameBlur, Lighting.ColorCorrection, Lighting.Blur, Lighting.Bloom}
 		if Value == true then
-			game.Lighting.FogEnd = 100000
-			game.Lighting.FogStart = 0
 			for _, v in pairs(stuff) do
 				v.Enabled = false
 				Lighting.Atmosphere.Parent = ReplicatedStorage
 			end
 		else
-			game.Lighting.FogEnd = 700
-			game.Lighting.FogStart = -324982342584107000
 			for _, v in pairs(stuff) do
 				v.Enabled = true
 				if ReplicatedStorage:FindFirstChild("Atmosphere") then
@@ -149,7 +145,7 @@ Main:AddToggle({
 	Callback = function(Value)
 		ESPtoggle = Value
 		while ESPtoggle do
-			task.wait(2)
+			task.wait(0.666)
 			for _,v in pairs(Mine:GetChildren()) do
 				if v.Name == Ore and not v:FindFirstChildWhichIsA("BillboardGui") then
 					addUi(v)
@@ -168,7 +164,7 @@ Main:AddToggle({
 })
 
 Misc:AddToggle({
-	Name = "Auto Ghostmine Ambrosia (Don't autofarm with this!)",
+	Name = "Autocollect Ambrosia (Don't autofarm with this)",
 	Default = false,
 	Callback = function(Value)
 		AmbrosiaTP = Value
@@ -204,11 +200,38 @@ Main:AddToggle({
 						Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
 					end
 					Characters[Plr.Name].Pickaxe.SetTarget:InvokeServer(v)
-					task.wait(0.2)
+					task.wait(0.3)
 					Characters[Plr.Name].Pickaxe.Activation:FireServer(true)
 					count = 0
 					repeat
-						count = count + 1
+						if count == 5 then
+							Characters[Plr.Name].Pickaxe.Activation:FireServer(true)
+						end
+						if count >=15 then
+							print("Breaking")
+							break
+						end
+						task.wait(0.5)
+						local Leg = game.Players.LocalPlayer.Character["Left Leg"]
+						local Platforms = game.Workspace.Terrain:GetChildren()
+						if Platforms[1] then
+							for i,sussy in pairs(game.Workspace.Terrain:GetChildren()) do
+								local Distance = (sussy.Position - Leg.Position).Magnitude
+								if Distance <= 5 then
+									print("Pass")
+									count = 0
+									repeat
+										task.wait(0.1)
+									until v.Parent ~= Mine or farming == false
+								else
+									count = count + 1
+									print(count)
+								end
+							end
+						else
+							count = count + 1
+							print(count)
+						end
 						if not farming then
 							break
 						end
@@ -217,10 +240,6 @@ Main:AddToggle({
 							task.wait(0.1)
 							break
 						end
-						if count >= 2000 then
-							continue
-						end
-						task.wait(0.1)
 					until v.Parent ~= Mine
 					Plr.Character.HumanoidRootPart.Anchored = false
 					if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then

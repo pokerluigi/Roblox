@@ -284,12 +284,12 @@ game.Workspace.Mine.ChildAdded:Connect(function(child)
 			Name = "OH MA GAWD",
 			Content = "Ambrosia just spawned!",
 			Image = "rbxassetid://10693905882",
-			Time = 10
+			Time = 13
 		})
 		local sound = Instance.new("Sound")
 		sound.SoundId = getAsset("AmbrosiaAlert.mp3")
 		sound.Parent = game.Workspace
-		sound.Volume = 2.5
+		sound.Volume = 3.5
 		sound.Playing = true
 		if AmbrosiaTP then
 			game.Workspace.Gravity = 0

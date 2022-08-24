@@ -1,3 +1,13 @@
+local getAsset = syn and getsynasset or getcustomasset
+
+if not isfile("AmbrosiaAlert.mp3") then
+	local request = syn and syn.request or request
+	local raw = request({
+		Url = "https://cdn.discordapp.com/attachments/752654393211486309/1012085895127650324/asddads.mp3",
+		Method = "GET",
+	})
+	writefile("AmbrosiaAlert.mp3", raw.Body)
+end
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -276,6 +286,11 @@ game.Workspace.Mine.ChildAdded:Connect(function(child)
 			Image = "rbxassetid://10693905882",
 			Time = 10
 		})
+		local sound = Instance.new("Sound")
+		sound.SoundId = getAsset("AmbrosiaAlert.mp3")
+		sound.Parent = game.Workspace
+		sound.Volume = 2.5
+		sound.Playing = true
 		if AmbrosiaTP then
 			game.Workspace.Gravity = 0
 			if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
@@ -299,6 +314,7 @@ game.Workspace.Mine.ChildAdded:Connect(function(child)
 			Characters[Plr.Name].Pickaxe.PickaxeScript.Disabled = false
 			game.ReplicatedStorage.ToSurface:InvokeServer()
 		end
+		
 		
 	else
 		return

@@ -44,6 +44,7 @@ local ESPtoggle
 local AmbrosiaTP
 local SafeMode = false
 local skip
+local farmStop
 
 function addUi(part)
 	local partgui = Instance.new("BillboardGui")
@@ -101,6 +102,7 @@ Misc:AddButton({
 		end
 	end    
 })
+
 Main:AddDropdown({
 	Name = "Select Ore",
 	Default = "1",
@@ -182,7 +184,7 @@ Main:AddToggle({
 	end    
 })
 
-Main:AddToggle({
+local susfarm = Main:AddToggle({
 	Name = "Enable Autofarm",
 	Default = false,
 	Callback = function(toggled)
@@ -191,6 +193,7 @@ Main:AddToggle({
 			workspace.Gravity = 0
 			if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 				Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
+				task.wait(0.1)
 			end
 			Characters[Plr.Name].Pickaxe.PickaxeScript.Disabled = true
 			task.wait(0.666)
@@ -218,13 +221,22 @@ Main:AddToggle({
 						Plr.Backpack.RayGun.Gun.Func:InvokeServer("Fire", {Vector3.new(v.Position.X, v.Position.Y, v.Position.Z), 661203044677.2754, Vector3.new(v.Position.X, v.Position.Y-4, v.Position.Z)})
 					end
 					if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
-						Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
+						FarmStop()
+						break
 					end
 					Characters[Plr.Name].Pickaxe.SetTarget:InvokeServer(v)
 					task.wait(0.3)
+					if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
+						FarmStop()
+						break
+					end
 					Characters[Plr.Name].Pickaxe.Activation:FireServer(true)
 					count = 0
 					repeat
+						if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
+							FarmStop()
+							break
+						end
 						if count == 5 then
 							Characters[Plr.Name].Pickaxe.Activation:FireServer(true)
 						end
@@ -257,21 +269,21 @@ Main:AddToggle({
 							break
 						end
 						if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
-							Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
-							task.wait(0.1)
+							FarmStop()
 							break
 						end
-					until v.Parent ~= Mine
+					until v.Parent ~= Mine or farming == false
 					Plr.Character.HumanoidRootPart.Anchored = false
 					if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
-						Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
-						task.wait(0.1)
+						FarmStop()
+						break
 					end
 					Characters[Plr.Name].Pickaxe.Activation:FireServer(false)
 				end
 			end
 			if farming == false then
 				workspace.Gravity = 192
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
 				if Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 					Characters[Plr.Name]:FindFirstChild("Pickaxe").PickaxeScript.Disabled = false
 				elseif Plr.Backpack:FindFirstChild("Pickaxe") then
@@ -281,6 +293,11 @@ Main:AddToggle({
 		end
 	end
 })
+
+function FarmStop()
+	susfarm:Set(false)
+	farming = false
+end
 
 Main:AddToggle({
 	Name = "Auto Deposit",

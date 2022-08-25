@@ -83,20 +83,21 @@ end
 Misc:AddButton({
 	Name = "FullBright",
 	Callback = function()
-		local fbcheck = fbcheck + 1
+		fbcheck = fbcheck + 1
 		if fbcheck >= 2 then
 			return
 		end
 		local stuff = {Lighting.GameBlur, Lighting.ColorCorrection, Lighting.Blur, Lighting.Bloom}
 		Lighting.FogEnd = 100000
 		Lighting.FogStart = 0
+		Lighting.Atmosphere.Parent = ReplicatedStorage
 		for _, v in pairs(stuff) do
 			v.Enabled = false
-			Lighting.Atmosphere.Parent = ReplicatedStorage
 		end
 		while true do
 			wait()
 			Lighting.Brightness = 2
+			Lighting.ClockTime = 13
 		end
 	end    
 })

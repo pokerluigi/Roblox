@@ -8,6 +8,9 @@ if not isfile("AmbrosiaAlert.mp3") then
 	})
 	writefile("AmbrosiaAlert.mp3", raw.Body)
 end
+
+game.Workspace.Terrain:ClearAllChildren()
+
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -38,6 +41,8 @@ local count
 local deposit
 local ESPtoggle
 local AmbrosiaTP
+local SafeMode = false
+local skip
 
 function addUi(part)
 	local partgui = Instance.new("BillboardGui")
@@ -131,18 +136,6 @@ Misc:AddToggle({
 	end
 })
 
-Main:AddToggle({
-	Name = "Auto Deposit",
-	Default = false,
-	Callback = function(Value)
-		deposit = Value
-		while deposit do
-			ReplicatedStorage.MoveAllItems:InvokeServer()
-			task.wait(5)
-		end
-	end
-})
-
 Main:AddButton({
 	Name = "Teleport to Ore",
 	Callback = function()
@@ -180,11 +173,19 @@ Main:AddToggle({
 })
 
 Misc:AddToggle({
-	Name = "Autocollect Ambrosia (Don't autofarm with this)",
+	Name = "GhostCollect Ambrosia (Don't autofarm with this!)",
 	Default = false,
 	Callback = function(Value)
 		AmbrosiaTP = Value
 	end
+})
+
+Main:AddToggle({
+	Name = "Autofarm SafeMode (Recommended in public servers)",
+	Default = true,
+	Callback = function(Value)
+		SafeMode = Value
+	end    
 })
 
 Main:AddToggle({
@@ -194,7 +195,6 @@ Main:AddToggle({
 		farming = toggled
 		while farming do
 			workspace.Gravity = 0
-			local char
 			if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 				Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
 			end
@@ -205,6 +205,17 @@ Main:AddToggle({
 					break
 				end
 				if v.Name == Ore then
+					for _,playerz in pairs(game.Players:GetPlayers()) do
+						local OrePlayerDistance = (v.Position - playerz.Character.Head.Position).Magnitude
+						if OrePlayerDistance <= 50 and SafeMode == true and playerz ~= game.Players.LocalPlayer then
+							skip = true
+							break
+						end
+					end
+					if skip == true then
+						skip = false
+						continue
+					end
 					v.CanCollide = false
 					Plr.Character.HumanoidRootPart.CFrame = v.CFrame
 					task.wait(0.1)
@@ -223,7 +234,7 @@ Main:AddToggle({
 						if count == 5 then
 							Characters[Plr.Name].Pickaxe.Activation:FireServer(true)
 						end
-						if count >=15 then
+						if count >=10 then
 							print("Breaking")
 							break
 						end
@@ -233,7 +244,7 @@ Main:AddToggle({
 						if Platforms[1] then
 							for i,sussy in pairs(game.Workspace.Terrain:GetChildren()) do
 								local Distance = (sussy.Position - Leg.Position).Magnitude
-								if Distance <= 5 then
+								if Distance <= 6 then
 									print("Pass")
 									count = 0
 									repeat
@@ -277,6 +288,18 @@ Main:AddToggle({
 	end
 })
 
+Main:AddToggle({
+	Name = "Auto Deposit",
+	Default = false,
+	Callback = function(Value)
+		deposit = Value
+		while deposit do
+			ReplicatedStorage.MoveAllItems:InvokeServer()
+			task.wait(5)
+		end
+	end
+})
+
 game.Workspace.Mine.ChildAdded:Connect(function(child)
 	task.wait(0.1)
 	if child.Name == "Ambrosia" then
@@ -314,8 +337,8 @@ game.Workspace.Mine.ChildAdded:Connect(function(child)
 			Characters[Plr.Name].Pickaxe.PickaxeScript.Disabled = false
 			game.ReplicatedStorage.ToSurface:InvokeServer()
 		end
-		
-		
+
+
 	else
 		return
 	end

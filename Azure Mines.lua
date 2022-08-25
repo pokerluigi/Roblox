@@ -38,6 +38,7 @@ local Ore
 local Raygun
 local farming = false
 local count
+local fbcheck = 0
 local deposit
 local ESPtoggle
 local AmbrosiaTP
@@ -79,34 +80,26 @@ function addUi(part)
 	partgui.Parent = part
 end
 
-Misc:AddToggle({
+Misc:AddButton({
 	Name = "FullBright",
-	Default = false,
-	Callback = function(Value)
-		local stuff = {Lighting.GameBlur, Lighting.ColorCorrection, Lighting.Blur, Lighting.Bloom}
-		if Value == true then
-			game.Lighting.FogEnd = 100000
-			game.Lighting.FogStart = 0
-			game.Lighting.Brightness = 2
-			for _, v in pairs(stuff) do
-				v.Enabled = false
-				Lighting.Atmosphere.Parent = ReplicatedStorage
-			end
-		else
-			game.Lighting.FogEnd = 700
-			game.Lighting.FogStart = -324982342584107000
-			game.Lighting.Brightness = 1
-			for _, v in pairs(stuff) do
-				v.Enabled = true
-				if ReplicatedStorage:FindFirstChild("Atmosphere") then
-					ReplicatedStorage.Atmosphere.Parent = Lighting
-				end
-			end
+	Callback = function()
+		local fbcheck = fbcheck + 1
+		if fbcheck >= 2 then
+			return
 		end
-
-	end
+		local stuff = {Lighting.GameBlur, Lighting.ColorCorrection, Lighting.Blur, Lighting.Bloom}
+		Lighting.FogEnd = 100000
+		Lighting.FogStart = 0
+		for _, v in pairs(stuff) do
+			v.Enabled = false
+			Lighting.Atmosphere.Parent = ReplicatedStorage
+		end
+		while true do
+			wait()
+			Lighting.Brightness = 2
+		end
+	end    
 })
-
 Main:AddDropdown({
 	Name = "Select Ore",
 	Default = "1",

@@ -221,7 +221,7 @@ local susfarm = Main:AddToggle({
 				if v.Name == Ore and v.Anchored == true then
 					for _,playerz in pairs(game.Players:GetPlayers()) do
 						local OrePlayerDistance = (v.Position - playerz.Character.Head.Position).Magnitude
-						if OrePlayerDistance <= 80 and SafeMode == true and playerz ~= game.Players.LocalPlayer then
+						if OrePlayerDistance <= 100 and SafeMode == true and playerz ~= game.Players.LocalPlayer then
 							skip = true
 							break
 						end

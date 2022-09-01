@@ -45,6 +45,7 @@ local AmbrosiaTP
 local SafeMode = false
 local skip
 local farmStop
+local zobies
 
 function addUi(part)
 	local partgui = Instance.new("BillboardGui")
@@ -80,6 +81,22 @@ function addUi(part)
 
 	partgui.Parent = part
 end
+
+Misc:AddToggle({
+	Name = "No Zombies",
+	Default = false,
+	Callback = function(Value)
+		zobies = Value
+		while zobies == true do
+			task.wait(0.6)
+			for _,v in pairs(game.Workspace.Mine:GetChildren()) do
+				if v.Name == "Zombie" then
+					v:Destroy()
+				end
+			end
+		end
+	end
+})
 
 Misc:AddButton({
 	Name = "FullBright",

@@ -11,6 +11,12 @@ end
 
 game.Workspace.Terrain:ClearAllChildren()
 
+for _,v in pairs(game.Workspace.Mine:GetChildren()) do
+	if v.Name == "Zombie" then
+		v:Destroy()
+	end
+end
+
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -87,14 +93,6 @@ Misc:AddToggle({
 	Default = false,
 	Callback = function(Value)
 		zobies = Value
-		while zobies == true do
-			task.wait(0.6)
-			for _,v in pairs(game.Workspace.Mine:GetChildren()) do
-				if v.Name == "Zombie" then
-					v:Destroy()
-				end
-			end
-		end
 	end
 })
 
@@ -365,10 +363,10 @@ game.Workspace.Mine.ChildAdded:Connect(function(child)
 			Characters[Plr.Name].Pickaxe.PickaxeScript.Disabled = false
 			game.ReplicatedStorage.ToSurface:InvokeServer()
 		end
-
-
-	else
-		return
+	elseif child.Name == "Zombie" then
+		if zobies == true then
+			child:Destroy()
+		end
 	end
 end)
 

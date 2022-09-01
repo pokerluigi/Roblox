@@ -11,12 +11,6 @@ end
 
 game.Workspace.Terrain:ClearAllChildren()
 
-for _,v in pairs(game.Workspace.Mine:GetChildren()) do
-	if v.Name == "Zombie" then
-		v:Destroy()
-	end
-end
-
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -93,6 +87,13 @@ Misc:AddToggle({
 	Default = false,
 	Callback = function(Value)
 		zobies = Value
+		if zobies == true then
+			for _,v in pairs(game.Workspace.Mine:GetChildren()) do
+				if v.Name == "Zombie" then
+					v:Destroy()
+				end
+			end
+		end
 	end
 })
 

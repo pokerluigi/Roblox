@@ -384,3 +384,4 @@ game.Workspace.Mine.ChildAdded:Connect(function(child)
 end)
 
 OrionLib:Init()
+print("Done!")

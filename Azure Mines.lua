@@ -362,7 +362,7 @@ game.Workspace.Mine.ChildAdded:Connect(function(child)
 			Characters[Plr.Name].Pickaxe.PickaxeScript.Disabled = false
 			game.ReplicatedStorage.ToSurface:InvokeServer()
 		end
-	elseif child.Name == "Zombie" or child.Name "Zwambie" then
+	elseif child.Name == "Zombie" or child.Name == "Zwambie" then
 		if zobies == true then
 			child:Destroy()
 		end

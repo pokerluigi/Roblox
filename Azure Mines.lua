@@ -253,9 +253,6 @@ local susfarm = Main:AddToggle({
 							FarmStop()
 							break
 						end
-						if count == 5 then
-							Characters[Plr.Name].Pickaxe.Activation:FireServer(true)
-						end
 						if count >=10 then
 							print("Breaking")
 							break
@@ -295,6 +292,7 @@ local susfarm = Main:AddToggle({
 						break
 					end
 					Characters[Plr.Name].Pickaxe.Activation:FireServer(false)
+					Plr.Character.HumanoidRootPart.CFrame = CFrame.new(310, 4979, -152)
 				end
 			end
 			if farming == false then

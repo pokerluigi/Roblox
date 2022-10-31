@@ -47,6 +47,20 @@ local skip
 local farmStop
 local zobies
 
+if game.Workspace.Mine:FindFirstChild("Ambrosia") then
+	OrionLib:MakeNotification({
+		Name = "OH MA GAWD",
+		Content = "Ambrosia just spawned!",
+		Image = "rbxassetid://10693905882",
+		Time = 13
+	})
+	local sound = Instance.new("Sound")
+	sound.SoundId = getAsset("AmbrosiaAlert.mp3")
+	sound.Parent = game.Workspace
+	sound.Volume = 3.5
+	sound.Playing = true
+end
+
 function addUi(part)
 	local partgui = Instance.new("BillboardGui")
 	local frame = Instance.new("Frame")

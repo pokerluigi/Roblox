@@ -221,6 +221,7 @@ local susfarm = Main:AddToggle({
 		farming = toggled
 		while farming do
 			workspace.Gravity = 0
+			Plr.Character.HumanoidRootPart.CFrame = CFrame.new(310, 4979, -152)
 			if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 				Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
 				task.wait(0.1)
@@ -281,10 +282,12 @@ local susfarm = Main:AddToggle({
 									print("Pass")
 									count = 0
 									repeat
+										Plr.Character.HumanoidRootPart.CFrame = v.CFrame
 										task.wait(0.1)
 									until v.Parent ~= Mine or farming == false
 								else
 									count = count + 1
+									Plr.Character.HumanoidRootPart.CFrame = v.CFrame
 									print(count)
 								end
 							end

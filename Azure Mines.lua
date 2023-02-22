@@ -201,6 +201,7 @@ Main:AddButton({
 	Callback = function()
 		for _,v in pairs(Mine:GetChildren()) do
 			if v.Name == Ore then
+                v.CanCollide = false
 				Plr.Character.HumanoidRootPart.CFrame = v.CFrame
 				break
 			end

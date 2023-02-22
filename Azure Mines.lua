@@ -47,6 +47,29 @@ local skip
 local farmStop
 local zobies
 
+local Noclip = nil
+local Clip = nil
+
+function noclip()
+	Clip = false
+	local function Nocl()
+		if Clip == false and game.Players.LocalPlayer.Character ~= nil then
+			for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+				if v:IsA('BasePart') and v.CanCollide and v.Name ~= floatName then
+					v.CanCollide = false
+				end
+			end
+		end
+		wait(0.21) -- basic optimization
+	end
+	Noclip = game:GetService('RunService').Stepped:Connect(Nocl)
+end
+
+function clip()
+	if Noclip then Noclip:Disconnect() end
+	Clip = true
+end
+
 if game.Workspace.Mine:FindFirstChild("Ambrosia") then
 	OrionLib:MakeNotification({
 		Name = "OH MA GAWD",
@@ -148,7 +171,9 @@ Misc:AddToggle({
 	Callback = function(Value)
 		Raygun = Value
 		if Raygun then
-
+            if not Plr.Backpack:FindFirstChild("RayGun") and not Plr.Character:FindFirstChild("RayGun") then
+                return print("no gp")
+            end
 			if not Characters[Plr.Name]:FindFirstChild("RayGun") then
 				Plr.Backpack:FindFirstChild("RayGun").Parent = Characters[Plr.Name]
 				task.wait(0.1)
@@ -156,8 +181,17 @@ Misc:AddToggle({
 			end
 		end
 		while Raygun do
+            if not Plr.Backpack:FindFirstChild("RayGun") and not Plr.Character:FindFirstChild("RayGun") then
+                print("no gp")
+                break
+            end
+            if not Characters[Plr.Name]:FindFirstChild("RayGun") then
+				Plr.Backpack:FindFirstChild("RayGun").Parent = Characters[Plr.Name]
+				task.wait(0.1)
+				Characters[Plr.Name]:FindFirstChild("RayGun").Parent = Plr.Backpack
 			Plr.Backpack.RayGun.Gun.Func:InvokeServer("Reload")
 			task.wait(3)
+            end
 		end
 	end
 })
@@ -221,6 +255,7 @@ local susfarm = Main:AddToggle({
 		farming = toggled
 		while farming do
 			workspace.Gravity = 0
+            noclip()
 			Plr.Character.HumanoidRootPart.CFrame = CFrame.new(310, 4979, -152)
 			if not Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 				Plr.Backpack:FindFirstChild("Pickaxe").Parent = Characters[Plr.Name]
@@ -244,7 +279,6 @@ local susfarm = Main:AddToggle({
 						skip = false
 						continue
 					end
-					v.CanCollide = false
 					Plr.Character.HumanoidRootPart.CFrame = v.CFrame
 					task.wait(0.1)
 					Plr.Character.HumanoidRootPart.Anchored = true
@@ -314,6 +348,7 @@ local susfarm = Main:AddToggle({
 			end
 			if farming == false then
 				workspace.Gravity = 192
+                clip()
 				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
 				if Characters[Plr.Name]:FindFirstChild("Pickaxe") then
 					Characters[Plr.Name]:FindFirstChild("Pickaxe").PickaxeScript.Disabled = false

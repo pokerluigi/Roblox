@@ -159,7 +159,7 @@ Misc:AddButton({
 Main:AddDropdown({
 	Name = "Select Ore",
 	Default = "1",
-	Options = {"Ambrosia", "Amethyst", "Antimatter", "Azure", "Baryte", "Boomite", "Coal", "Copper", "Constellatium", "Darkmatter", "Diamond", "Dragonglass", "Dragonstone", "Emerald", "Firecrystal", "Frightstone", "Frostarium", "Garnet", "Gold", "Illuminunium", "Iron", "Kappa", "Mithril", "Moonstone", "Newtonium", "Nightmarium", "Opal", "Painite", "Platinum", "Plutonium", "Pumpkinite", "Promethium", "Rainbonite", "Ruby", "Sapphire", "Silver", "Serendibite", "Sinistyte L", "Sinistyte M", "Sinistyte S", "Stellarite", "Stone", "Sulfur", "Symmetrium", "Topaz", "Twitchite", "Unobtainium", "Uranium"},
+	Options = {"Ambrosia", "Nihilium", "Amethyst", "Antimatter", "Azure", "Baryte", "Boomite", "Bismuth", "Coal", "Copper", "Constellatium", "Darkmatter", "Diamond", "Dragonglass", "Dragonstone", "Emerald", "Firecrystal", "Frightstone", "Frostarium", "Garnet", "Gold", "Illuminunium", "Iron", "Kappa", "Mithril", "Moonstone", "Newtonium", "Nightmarium", "Opal", "Painite", "Platinum", "Plutonium", "Pumpkinite", "Promethium", "Rainbonite", "Ruby", "Sapphire", "Silver", "Serendibite", "Sinistyte L", "Sinistyte M", "Sinistyte S", "Stellarite", "Stone", "Sulfur", "Symmetrium", "Topaz", "Twitchite", "Unobtainium", "Uranium"},
 	Callback = function(Value)
 		Ore = Value
 	end
